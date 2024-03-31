@@ -7,6 +7,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+		sh '''
             	mkdir /home/task
 		touch /home/task/test_report.txt
 		touch /home/task/manage_file_dir_path.txt
@@ -15,21 +16,26 @@ pipeline {
 		cp /home/task/pipeline_scrips/make_test_script.sh /home/task/make_test_script.sh
 		chmod 711 make_test_script.sh
 		git clone https://github.com/CavendishBanana/aplikacja_lista_zakopow.git
+		'''
             	echo "After build"
 		}
         }
         stage('Test') {
             steps {
+		sh '''
             	cd /home/task
 		bash make_test_script.sh
+		'''
 		echo "After test"
             }
         }
         stage('Deliver') {
             steps {
+		sh '''
             	cd /home/task/aplikacja_lista_zakopow/lista_zakopow
 		python3 manage.py runserver
-            	echo "Server running"
+            	'''
+		echo "Server running"
 		}
         }
     }
